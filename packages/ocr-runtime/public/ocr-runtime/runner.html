@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OCR 内部执行器</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "js-yaml": "./vendor/paddleocr/js-yaml.esm.js",
+          "clipper-lib": "./vendor/paddleocr/clipper-lib.esm.js",
+          "@techstark/opencv-js": "./vendor/paddleocr/opencv-loader.esm.js",
+          "onnxruntime-web": "./vendor/onnxruntime/onnxruntime-web.esm.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <input id="image" type="file" accept="image/png,image/jpeg" />
+    <pre id="state">ready</pre>
+    <script type="module" src="./runner.js"></script>
+  </body>
+</html>

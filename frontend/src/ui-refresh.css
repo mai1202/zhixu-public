@@ -1,0 +1,3166 @@
+/*
+ * 本轮界面整理：优先使用 MDUI 的组件与 Material You 色彩变量。
+ * 旧样式仍保留在历史页面中，这里只覆盖应用壳和本次重构的核心工作区。
+ */
+
+:root {
+  --app-top-bar-height: 56px;
+  --app-content-gap: clamp(16px, 2vw, 28px);
+  --app-surface: rgb(var(--mdui-color-surface, 255 255 255));
+  --app-surface-container: rgb(var(--mdui-color-surface-container-low, 247 248 252));
+  --app-outline: rgb(var(--mdui-color-outline-variant, 226 229 237));
+  --app-primary: rgb(var(--mdui-color-primary, 49 93 168));
+  --app-on-primary: rgb(var(--mdui-color-on-primary, 255 255 255));
+  --app-on-surface: rgb(var(--mdui-color-on-surface, 28 34 48));
+  --app-on-surface-variant: rgb(var(--mdui-color-on-surface-variant, 96 104 120));
+}
+
+body {
+  color: var(--app-on-surface);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* 正文内链统一颜色与键盘焦点，避免裸链接跟随浏览器默认蓝紫。 */
+:where(.main-content a, .app-link) {
+  color: var(--app-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+:where(.main-content a, .app-link):hover {
+  text-decoration: underline;
+}
+
+:where(.app-shell a):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--app-primary) 55%, transparent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* 操作型链接与按钮共享尺寸、颜色和状态，避免首次设置入口出现裸蓝色下划线。 */
+.app-button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background .15s ease;
+}
+.app-button-link:hover {
+  background: color-mix(in srgb, var(--app-primary) 88%, black);
+  text-decoration: none;
+}
+.app-button-link .app-icon { width: 18px; height: 18px; }
+
+/* 右侧设置保持固定点击范围并贴齐页头，图标不会随内容或字号漂移。 */
+.app-profile-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border-radius: 50%;
+  color: var(--app-on-surface-variant);
+  text-decoration: none;
+}
+.app-profile-link .app-icon { width: 24px; height: 24px; }
+.app-profile-link:hover,
+.app-profile-link[aria-current='page'] {
+  background: color-mix(in srgb, var(--app-primary) 10%, transparent);
+  color: var(--app-primary);
+}
+
+/* 应用壳压缩固定区域，把更多高度和宽度留给业务内容。 */
+.app-top-bar {
+  min-height: var(--app-top-bar-height);
+  padding: 0 18px;
+  background: color-mix(in srgb, var(--app-surface) 92%, transparent);
+}
+
+.app-brand {
+  gap: 9px;
+}
+
+.app-brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 11px;
+}
+
+.app-body {
+  grid-template-columns: 76px minmax(0, 1fr);
+  min-height: calc(100dvh - var(--app-top-bar-height));
+}
+
+.desktop-navigation {
+  top: var(--app-top-bar-height);
+  height: calc(100dvh - var(--app-top-bar-height));
+  background: color-mix(in srgb, var(--app-surface-container) 76%, transparent);
+}
+
+.main-content {
+  padding: 18px var(--app-content-gap) 30px;
+}
+
+.page-section {
+  width: min(100%, 1380px);
+}
+
+/* 对话页：页头、历史与消息区共享可用高度，输入区始终留在视口内。 */
+.main-content--chat {
+  height: calc(100dvh - var(--app-top-bar-height));
+  padding: 14px 18px 16px;
+  overflow: hidden;
+}
+
+/* 日程页由日历接管内部滚动，主内容区只负责给出精确的剩余高度。 */
+.main-content--schedule {
+  height: calc(100dvh - var(--app-top-bar-height));
+  padding: 16px var(--app-content-gap);
+  overflow: hidden;
+}
+
+.agent-page {
+  display: flex;
+  width: 100%;
+  max-width: 1500px;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.agent-page-heading {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+.agent-desktop-sidebar-toggle {
+  flex: 0 0 auto;
+  margin-left: -7px;
+  color: var(--app-on-surface-variant);
+}
+
+.agent-title-group {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 11px;
+}
+
+.agent-title-mark {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--app-primary) 13%, white);
+  color: var(--app-primary);
+}
+
+.agent-title-mark .app-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.agent-page-heading h1 {
+  margin: 0;
+  font-size: 25px;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+}
+
+.agent-page-heading p {
+  margin: 3px 0 0;
+  color: var(--app-on-surface-variant);
+  font-size: 12px;
+}
+
+.agent-heading-actions {
+  margin-left: auto;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.agent-heading-link {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 17px;
+  color: var(--app-on-surface-variant);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.agent-heading-link:hover {
+  background: color-mix(in srgb, var(--app-primary) 8%, transparent);
+  color: var(--app-primary);
+}
+
+.agent-new-button {
+  margin-left: 3px;
+}
+
+.agent-page > .inline-message {
+  flex: 0 0 auto;
+  margin: 0 0 8px;
+  padding: 7px 12px;
+  border-radius: 10px;
+}
+
+.agent-page > .error-text.inline-message {
+  background: rgb(255 238 236);
+}
+
+.agent-page > .success-text.inline-message {
+  background: rgb(233 247 239);
+}
+
+.agent-layout {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(214px, 258px) minmax(0, 1fr);
+  gap: 12px;
+  height: auto;
+  min-height: 0;
+  transition: grid-template-columns .22s cubic-bezier(.2, 0, 0, 1), gap .22s ease;
+}
+
+.agent-layout--sidebar-collapsed {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.agent-layout--sidebar-collapsed .agent-sidebar {
+  display: none;
+}
+
+.agent-sidebar,
+.agent-main {
+  border-color: var(--app-outline);
+  border-radius: 22px;
+  background: var(--app-surface);
+  box-shadow: 0 8px 30px rgb(35 46 70 / 4%);
+}
+
+.agent-sidebar {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  padding: 12px 10px 10px;
+}
+
+.agent-sidebar-heading {
+  flex-wrap: nowrap;
+  margin-bottom: 7px;
+  padding: 2px 4px 6px;
+}
+
+.agent-sidebar-title {
+  display: grid;
+  gap: 1px;
+}
+
+.agent-sidebar-title > span {
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.agent-sidebar-title h2 {
+  font-size: 16px;
+}
+
+.agent-sidebar-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.agent-sidebar-tools mdui-button {
+  --mdui-typescale-label-large-size: 11px;
+}
+
+.agent-sidebar-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.agent-sidebar-empty {
+  margin: 10px 6px;
+  color: var(--app-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.agent-conversation-list {
+  padding: 2px 0 8px;
+}
+
+.agent-conversation-list mdui-list-item {
+  margin: 2px 0;
+  --mdui-typescale-label-large-size: 13px;
+  --mdui-typescale-body-small-size: 10px;
+}
+
+.agent-conversation-time {
+  font-size: 10px;
+}
+
+.agent-sidebar-new {
+  width: 100%;
+  flex: 0 0 auto;
+  margin-top: 6px;
+}
+
+.agent-sidebar-new .app-icon {
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+}
+
+.agent-main {
+  position: relative;
+}
+
+.agent-profile-row {
+  flex: 0 0 auto;
+  gap: 10px;
+  padding: 9px 14px;
+  background: color-mix(in srgb, var(--app-surface-container) 55%, white);
+}
+
+.agent-model-select {
+  width: min(280px, 34vw);
+  flex: 0 1 280px;
+}
+
+.agent-thinking-select {
+  width: 138px;
+  flex: 0 0 138px;
+}
+
+.agent-model-select,
+.agent-thinking-select {
+  --mdui-typescale-body-medium-size: 12px;
+}
+
+.agent-mode-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.agent-model-missing {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff1e4;
+  color: #a45f1c;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.agent-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3b9a71;
+  box-shadow: 0 0 0 4px rgb(59 154 113 / 10%);
+}
+
+.agent-manage-link {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.agent-archive-banner {
+  margin: 8px 12px 0;
+  padding: 9px 12px;
+}
+
+.agent-turns {
+  gap: 20px;
+  padding: 24px clamp(18px, 3.2vw, 46px);
+  scrollbar-color: color-mix(in srgb, var(--app-primary) 25%, transparent) transparent;
+  scrollbar-width: thin;
+  scroll-padding-bottom: 18px;
+}
+
+.agent-turns::-webkit-scrollbar,
+.agent-sidebar-scroll::-webkit-scrollbar,
+.calendar-grid-scroll::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.agent-turns::-webkit-scrollbar-thumb,
+.agent-sidebar-scroll::-webkit-scrollbar-thumb,
+.calendar-grid-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-primary) 20%, transparent);
+}
+
+.agent-turns::-webkit-scrollbar-track,
+.agent-sidebar-scroll::-webkit-scrollbar-track,
+.calendar-grid-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.agent-turn {
+  animation: agent-message-in .28s cubic-bezier(.2, 0, 0, 1) both;
+}
+
+.agent-turn-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--app-on-surface-variant);
+  font-size: 12px;
+}
+
+.agent-turn-label time {
+  opacity: .72;
+}
+
+.agent-turn-avatar {
+  display: inline-grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--app-primary) 12%, white);
+  color: var(--app-primary);
+}
+
+.agent-turn-avatar .app-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.agent-turn-avatar--thinking {
+  animation: agent-avatar-pulse 1.8s ease-in-out infinite;
+}
+
+.agent-turn[data-role='assistant'] {
+  max-width: min(100%, 900px);
+}
+
+.agent-turn[data-role='assistant'] > .agent-turn-content {
+  margin: 7px 0 0 30px;
+  padding: 12px 15px;
+  border: 1px solid color-mix(in srgb, var(--app-outline) 80%, transparent);
+  border-radius: 5px 17px 17px 17px;
+  background: color-mix(in srgb, var(--app-surface-container) 62%, white);
+  font-size: 13px;
+}
+
+.agent-turn[data-role='user'] {
+  max-width: min(78%, 720px);
+  padding: 11px 15px;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 12%, transparent);
+  border-radius: 17px 17px 5px 17px;
+  background: color-mix(in srgb, var(--app-primary) 10%, white);
+  font-size: 13px;
+}
+
+.agent-turn[data-role='user'] .agent-turn-content {
+  margin-top: 4px;
+}
+
+.agent-change-card {
+  margin-left: 30px;
+  border-color: color-mix(in srgb, var(--app-primary) 22%, var(--app-outline));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--app-primary) 4%, white);
+}
+
+.agent-turn > a,
+.agent-turn details {
+  margin-left: 30px;
+}
+
+.agent-welcome {
+  width: min(100%, 700px);
+  align-self: center;
+  margin: auto;
+  padding: 18px 8px 24px;
+  text-align: center;
+}
+
+.agent-welcome-visual {
+  position: relative;
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  margin: 0 auto 14px;
+}
+
+.agent-welcome-visual::before,
+.agent-welcome-visual::after {
+  position: absolute;
+  border-radius: 24px;
+  content: '';
+  pointer-events: none;
+}
+
+.agent-welcome-visual::before {
+  inset: 7px;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 15%, transparent);
+  animation: agent-halo 3.6s cubic-bezier(.2, 0, 0, 1) infinite;
+}
+
+.agent-welcome-visual::after {
+  inset: -2px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--app-primary) 13%, transparent), transparent 68%);
+  animation: agent-glow 3.6s ease-in-out infinite;
+}
+
+.agent-welcome-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgb(var(--mdui-color-primary, 49 93 168)), #658bc2);
+  color: #fff;
+  box-shadow: 0 10px 24px rgb(49 93 168 / 22%);
+  animation: agent-core-float 4.2s ease-in-out infinite;
+}
+
+.agent-welcome-core .app-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.agent-welcome-orbit {
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgb(49 93 168 / 20%);
+  border-radius: 24px;
+  animation: agent-orbit 7s linear infinite;
+}
+
+.agent-welcome-orbit::after {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6b8ec4;
+  content: '';
+  transform: translateX(-50%);
+}
+
+.agent-welcome h2 {
+  margin: 2px 0 8px;
+  font-size: clamp(24px, 2.8vw, 32px);
+  letter-spacing: -.035em;
+}
+
+.agent-welcome-copy {
+  max-width: 560px;
+  margin: 0 auto;
+  color: var(--app-on-surface-variant);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.agent-starters {
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0 14px;
+}
+
+.agent-starter {
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  --shape-corner: 999px;
+  --mdui-typescale-label-large-size: 12px;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.agent-starter:hover {
+  box-shadow: 0 5px 14px rgb(35 52 82 / 8%);
+  transform: translateY(-1px);
+}
+
+.agent-starter .app-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.agent-welcome-tips {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.agent-welcome-tips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.agent-welcome-tips .app-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.agent-model-warning {
+  display: flex;
+  width: min(100%, 620px);
+  align-items: center;
+  gap: 10px;
+  margin: 14px auto;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #fff4e8;
+  color: #744513;
+  text-align: left;
+}
+
+.agent-model-warning-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 58%);
+}
+
+.agent-model-warning-icon .app-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.agent-model-warning > div {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+
+.agent-model-warning strong {
+  font-size: 12px;
+}
+
+.agent-model-warning p {
+  margin: 0;
+  color: #8a5b29;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.agent-model-warning mdui-button {
+  flex: 0 0 auto;
+}
+
+.agent-run-progress {
+  flex: 0 0 auto;
+  height: 3px;
+  --shape-corner: 0;
+  --mdui-color-primary: 49 93 168;
+}
+
+.agent-thinking-dots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  margin-left: 1px;
+}
+
+.agent-thinking-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--app-primary);
+  animation: agent-thinking-dot 1.15s ease-in-out infinite;
+}
+
+.agent-thinking-dots i:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.agent-thinking-dots i:nth-child(3) {
+  animation-delay: .3s;
+}
+
+.agent-tool-progress {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0 30px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-primary) 7%, white);
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.agent-progress-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--app-primary);
+  animation: agent-avatar-pulse 1.6s ease-in-out infinite;
+}
+
+.agent-scroll-latest {
+  position: absolute;
+  z-index: 4;
+  right: 24px;
+  bottom: 132px;
+  box-shadow: 0 8px 24px rgb(31 47 74 / 14%);
+}
+
+.agent-scroll-latest .app-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.agent-memory-hint {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 5px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 72%, transparent);
+  font-size: 10px;
+  text-align: center;
+}
+
+.agent-composer {
+  position: relative;
+  flex: 0 0 auto;
+  gap: 7px;
+  margin: 0 10px 10px;
+  padding: 11px 12px 9px;
+  border: 1px solid color-mix(in srgb, var(--app-outline) 95%, transparent);
+  border-radius: 19px;
+  background: color-mix(in srgb, var(--app-surface-container) 72%, white);
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+.agent-composer:focus-within {
+  border-color: color-mix(in srgb, var(--app-primary) 45%, transparent);
+  background: var(--app-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-primary) 8%, transparent);
+}
+
+.agent-composer--dragging {
+  border-color: var(--app-primary);
+  background: color-mix(in srgb, var(--app-primary) 7%, white);
+}
+
+.agent-drop-hint {
+  position: absolute;
+  z-index: 3;
+  inset: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed color-mix(in srgb, var(--app-primary) 55%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, white 90%, transparent);
+  color: var(--app-primary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.agent-composer-label {
+  display: none;
+}
+
+.agent-message-field {
+  width: 100%;
+  --mdui-typescale-body-large-size: 14px;
+  --mdui-typescale-body-large-line-height: 1.58;
+}
+
+.agent-message-field::part(container) {
+  min-height: 50px;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--app-surface) 78%, transparent);
+}
+
+.agent-composer-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.agent-file-chip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px 5px 9px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--app-primary) 7%, white);
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.agent-file-chip > span {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-file-chip small {
+  color: var(--app-primary);
+}
+
+.agent-file-chip .app-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.agent-file-chip button {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.agent-file-chip button:hover {
+  background: rgb(0 0 0 / 7%);
+}
+
+.agent-composer-actions {
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.agent-composer-tools,
+.agent-send-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.agent-composer-tools mdui-button {
+  --mdui-typescale-label-large-size: 11px;
+}
+
+.agent-composer-tools .app-icon,
+.agent-send-button .app-icon {
+  width: 17px;
+  height: 17px;
+  margin-right: 4px;
+}
+
+.agent-composer-note {
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.agent-send-button {
+  min-width: 86px;
+}
+
+/* 首页：用一条行动概览和两条信息流替代大面积营销式卡片。 */
+.today-page {
+  width: min(100%, 1320px);
+}
+
+.today-heading {
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.today-date-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.today-date-chip {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-primary) 9%, white);
+  color: var(--app-primary);
+  font-weight: 500;
+}
+
+.today-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b9a71;
+  box-shadow: 0 0 0 4px rgb(59 154 113 / 9%);
+}
+
+.today-heading h1 {
+  margin-bottom: 5px;
+  font-size: clamp(28px, 3vw, 38px);
+}
+
+.today-summary {
+  font-size: 13px;
+}
+
+.today-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.today-pill {
+  height: 38px;
+  --shape-corner: 999px;
+  --mdui-typescale-label-large-size: 12px;
+}
+
+.today-pill .app-icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* 未连接采集设备时持续展示配置引导，不提供关闭入口。 */
+.today-device-setup {
+  display: block;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 18%, var(--app-outline));
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 16%, rgb(255 255 255 / 74%), transparent 15rem),
+    color-mix(in srgb, var(--app-primary) 8%, white);
+}
+
+.today-device-setup-main {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 17px 10px;
+}
+
+.today-device-setup-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--app-primary) 13%, white);
+  color: var(--app-primary);
+}
+
+.today-device-setup-icon .app-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.today-device-setup-main > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.today-device-setup-kicker {
+  color: var(--app-primary);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.today-device-setup h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.today-device-setup p {
+  margin: 0;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.today-device-setup-steps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 7px;
+  padding: 0 17px 14px 71px;
+}
+
+.today-device-setup-steps span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 58%);
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.today-device-setup-steps b {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--app-primary) 11%, white);
+  color: var(--app-primary);
+  font-size: 9px;
+}
+
+.today-device-setup-steps small {
+  margin-left: auto;
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.today-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(340px, .88fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.today-focus {
+  min-height: 224px;
+  gap: 13px;
+  margin: 0;
+  padding: 24px 26px;
+  border-radius: 26px;
+}
+
+.today-focus-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.today-focus-body > div {
+  min-width: 0;
+}
+
+.today-focus h2 {
+  font-size: clamp(24px, 2.7vw, 34px);
+}
+
+.today-focus-link {
+  flex: 0 0 auto;
+  margin-top: 0 !important;
+  padding: 7px 11px;
+  border: 1px solid rgb(255 255 255 / 26%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  transition: background-color .16s ease, transform .16s ease;
+}
+
+.today-focus-link:hover {
+  background: rgb(255 255 255 / 18%);
+  transform: translateX(1px);
+}
+
+.today-focus-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.today-focus-label i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 11%);
+  animation: today-live-pulse 2.2s ease-in-out infinite;
+}
+
+.today-focus-deadline {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgb(255 255 255 / 15%);
+  color: rgb(255 255 255 / 78%);
+  font-size: 11px;
+}
+
+.today-focus-deadline strong {
+  overflow: hidden;
+  color: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-focus-deadline small {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.today-action-card {
+  display: flex;
+  min-height: 224px;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--app-surface) 94%, white);
+  box-shadow: 0 8px 28px rgb(33 48 73 / 4%);
+}
+
+.today-action-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.today-action-heading > div {
+  min-width: 0;
+}
+
+.today-action-heading h2 {
+  margin: 2px 0 0;
+  font-size: 18px;
+  letter-spacing: -.015em;
+}
+
+.today-action-heading p {
+  margin: 3px 0 0;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.today-action-all {
+  flex: 0 0 auto;
+  color: var(--app-primary);
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.today-action-list {
+  display: grid;
+  gap: 2px;
+}
+
+.today-action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px 0;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 66%, transparent);
+}
+
+.today-action-row:first-child {
+  border-top: 0;
+}
+
+.today-action-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.today-action-copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-action-copy small {
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.today-action-copy small[data-overdue='true'] {
+  color: #a13c35;
+}
+
+.today-action-pending {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: #fff4e8;
+  color: #8a531c;
+  font-size: 10px;
+}
+
+.today-action-pending .app-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.today-action-pending a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.today-action-card .today-agent-cue {
+  flex: 1;
+  gap: 9px;
+  margin: 0;
+  padding: 10px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 72%, transparent);
+  border-radius: 0;
+  background: transparent;
+}
+
+.today-action-card .today-agent-mark {
+  width: 31px;
+  height: 31px;
+  flex-basis: 31px;
+  border-radius: 10px;
+}
+
+.today-action-card .today-agent-mark .app-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.today-action-card .today-agent-cue > div {
+  gap: 1px;
+}
+
+.today-agent-label {
+  color: var(--app-primary);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.today-action-card .today-agent-cue strong {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.today-action-card .today-agent-cue p {
+  max-width: 380px;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.today-action-card .today-agent-cue mdui-button {
+  --mdui-typescale-label-large-size: 10px;
+  flex: 0 0 auto;
+}
+
+.today-columns {
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+  gap: 32px;
+}
+
+.today-side-column {
+  display: grid;
+  gap: 0;
+  align-content: start;
+}
+
+.today-block,
+.today-radar {
+  padding: 15px 0 10px;
+}
+
+.today-side-column .today-radar {
+  margin-top: 0;
+}
+
+.section-heading {
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.section-heading p {
+  margin: 3px 0 0;
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.today-timeline-link {
+  display: grid;
+  grid-template-columns: 48px 14px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  width: 100%;
+  min-height: 54px;
+  padding: 7px 5px;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.today-timeline li {
+  display: block;
+  min-height: 0;
+  padding: 0;
+}
+
+.today-timeline-link:hover {
+  background: color-mix(in srgb, var(--app-primary) 5%, white);
+}
+
+.today-timeline-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.today-timeline-link > .app-icon {
+  width: 16px;
+  height: 16px;
+  color: rgb(var(--mdui-color-outline, 150 155 165));
+}
+
+.today-timeline time {
+  padding: 0;
+}
+
+.today-timeline .timeline-dot {
+  margin-top: 0;
+}
+
+.today-task-row {
+  min-height: 53px;
+  padding: 8px 4px;
+}
+
+.today-radar-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--app-surface-container);
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.today-radar-empty .app-icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* 日程页：工具栏紧凑，日历占满剩余视口。 */
+.schedule-page {
+  display: flex;
+  width: min(100%, 1480px);
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.schedule-header {
+  flex: 0 0 auto;
+  margin-bottom: 9px;
+}
+
+.schedule-header h1 {
+  margin: 0 0 2px;
+  font-size: 29px;
+}
+
+.schedule-header p:last-child {
+  font-size: 12px;
+}
+
+.schedule-toolbar {
+  flex: 0 0 auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.schedule-view-switch {
+  width: 224px;
+}
+
+.schedule-navigation {
+  gap: 4px;
+}
+
+.schedule-navigation strong {
+  min-width: 126px;
+  font-size: 12px;
+}
+
+.schedule-range-compact {
+  display: none;
+}
+
+.schedule-search {
+  display: block;
+  width: clamp(280px, 34vw, 480px);
+  height: 46px;
+  min-width: 0;
+  flex: 0 1 480px;
+  --mdui-typescale-body-medium-size: 13px;
+}
+
+.schedule-search::part(container) {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.schedule-insight {
+  flex: 0 0 auto;
+}
+
+.schedule-insight + .schedule-editor,
+.schedule-insight + .warning-list {
+  flex: 0 0 auto;
+}
+
+.schedule-page .agent-insight-panel {
+  max-height: 120px;
+  margin: 0 0 8px;
+  border-radius: 14px;
+}
+
+.schedule-page .agent-insight-panel--compact > header {
+  padding-block: 9px;
+}
+
+.schedule-page .agent-insight-panel > header {
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.schedule-page .agent-insight-mark {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+  border-radius: 10px;
+}
+
+.schedule-page .agent-insight-mark .app-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.schedule-page .agent-insight-panel h2 {
+  margin: 0 0 2px;
+  font-size: 13px;
+}
+
+.schedule-page .agent-insight-panel .eyebrow {
+  display: none;
+}
+
+.schedule-page .agent-insight-panel header p:last-child {
+  font-size: 10px;
+}
+
+.schedule-page .agent-insight-list {
+  max-height: 56px;
+  overflow: auto;
+  padding: 0 12px 6px;
+}
+
+.schedule-page .agent-insight-list li {
+  padding: 5px 0;
+}
+
+.schedule-page .agent-insight-empty {
+  padding: 0 12px 8px;
+  font-size: 10px;
+}
+
+.schedule-page .agent-insight-actions button {
+  font-size: 10px;
+}
+
+.schedule-page .agent-insight-actions .agent-insight-primary {
+  padding: 5px 9px;
+}
+
+.schedule-editor {
+  flex: 0 0 auto;
+  margin: 0 0 8px;
+  border: 1px solid var(--app-outline);
+  border-radius: 14px;
+  background: var(--app-surface);
+  overflow: hidden;
+}
+
+.schedule-editor mdui-list-item {
+  --mdui-typescale-label-large-size: 13px;
+  --mdui-typescale-body-small-size: 10px;
+}
+
+.schedule-editor mdui-list-item .app-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.schedule-editor-form mdui-text-field,
+.schedule-editor-form mdui-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.schedule-timezone-field {
+  display: grid;
+  gap: 5px;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.schedule-editor-form {
+  padding: 4px 15px 15px;
+}
+
+.schedule-calendar-shell--fill {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 280px;
+  flex-direction: column;
+  border-radius: 18px;
+}
+
+.schedule-calendar-shell--fill .schedule-calendar {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.schedule-calendar-shell--fill .schedule-calendar[data-view='month'] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+/* 日视图卡片按实际内容撑开，保留滚动空间给排得较满的日程。 */
+.schedule-calendar-shell--fill[data-view='day'] {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+.schedule-calendar-shell--fill .calendar-grid-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.schedule-calendar-shell--fill .calendar-grid {
+  height: calc(100% - 8px);
+  min-height: 0;
+  grid-template-rows: 42px minmax(0, 1fr);
+}
+
+.schedule-calendar-shell--fill .month-grid {
+  min-height: 0;
+  grid-auto-rows: minmax(78px, 1fr);
+}
+
+.schedule-calendar-shell--fill .month-day {
+  min-height: 0;
+}
+
+.schedule-calendar-shell--fill .month-weekdays span {
+  padding: 7px 6px;
+}
+
+.schedule-calendar-shell--fill .calendar-day-heading {
+  min-height: 42px;
+}
+
+.schedule-conflicts {
+  flex: 0 0 auto;
+}
+
+mdui-dialog.schedule-dialog::part(panel),
+mdui-dialog.schedule-detail-dialog::part(panel) {
+  width: min(100%, 42rem);
+  max-width: min(42rem, calc(100vw - 32px));
+}
+
+mdui-dialog.schedule-detail-dialog .schedule-item-sheet {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+/* 设置页：概览与四个功能区分离，低频表单收进 MDUI 折叠面板。 */
+.settings-page {
+  width: min(100%, 1180px);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.settings-header h1 {
+  margin-bottom: 4px;
+  font-size: 32px;
+}
+
+.settings-header p {
+  margin: 0;
+  color: var(--app-on-surface-variant);
+  font-size: 13px;
+}
+
+.settings-status-strip {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.settings-status-strip mdui-chip {
+  --shape-corner: 999px;
+  --mdui-typescale-label-large-size: 12px;
+}
+
+.settings-status-strip mdui-chip .app-icon,
+.settings-status-security .app-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.settings-chip-warning {
+  margin-left: 5px;
+  padding-left: 7px;
+  border-left: 1px solid rgb(var(--mdui-color-outline-variant, 226 229 237));
+  color: #a13c35;
+}
+
+.settings-status-security {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 0 9px;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.settings-tabs {
+  position: sticky;
+  z-index: 4;
+  top: var(--app-top-bar-height);
+  margin: 0 0 14px;
+  border-bottom: 1px solid var(--app-outline);
+  background: color-mix(in srgb, #f8f9fc 96%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.settings-tabs mdui-tab,
+.assistant-settings-tabs mdui-tab {
+  min-width: 0;
+  --mdui-typescale-title-small-size: 13px;
+  white-space: nowrap;
+}
+
+.settings-tab-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-overview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(380px, 1.05fr);
+  gap: 12px;
+}
+
+.settings-section-card,
+.settings-device-card,
+.settings-model-card {
+  display: block;
+  border-color: var(--app-outline);
+  border-radius: 20px;
+  background: var(--app-surface);
+}
+
+.settings-section-content {
+  display: grid;
+  gap: 10px;
+  padding: 17px 19px;
+}
+
+.settings-section-content h2,
+.settings-section-content h3 {
+  margin: 0;
+}
+
+.settings-section-content h2 {
+  font-size: 20px;
+}
+
+.settings-section-content h3 {
+  font-size: 17px;
+}
+
+.settings-section-content p {
+  margin: 0;
+  color: var(--app-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.settings-kicker {
+  color: var(--app-primary);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.settings-status-card {
+  background:
+    radial-gradient(circle at 92% 10%, rgb(255 255 255 / 60%), transparent 13rem),
+    color-mix(in srgb, var(--app-primary) 9%, white);
+}
+
+.settings-status-card .settings-section-content {
+  height: 100%;
+  align-content: start;
+}
+
+.settings-status-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.settings-status-checks span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 64%);
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.settings-status-checks span[data-ok='true'] {
+  color: #2f7d5a;
+}
+
+.settings-status-checks .app-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.settings-setup-steps {
+  display: grid;
+  gap: 5px;
+  margin: 1px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.settings-setup-steps li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 52%);
+}
+
+.settings-setup-steps li > span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--app-primary) 10%, white);
+  color: var(--app-primary);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.settings-setup-steps li > div {
+  display: grid;
+  gap: 1px;
+}
+
+.settings-setup-steps strong {
+  font-size: 11px;
+}
+
+.settings-setup-steps small {
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.settings-setup-steps .app-icon {
+  width: 16px;
+  height: 16px;
+  color: rgb(var(--mdui-color-outline, 150 155 165));
+}
+
+.settings-setup-steps li[data-done='true'] > span,
+.settings-setup-steps li[data-done='true'] .app-icon {
+  color: #2f7d5a;
+}
+
+.settings-status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--app-primary) 12%, transparent);
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.settings-status-footer > span {
+  min-width: 0;
+}
+
+.settings-status-footer mdui-button {
+  flex: 0 0 auto;
+  --mdui-typescale-label-large-size: 11px;
+}
+
+.settings-directory-card {
+  overflow: hidden;
+}
+
+.settings-directory-card .settings-section-content {
+  gap: 4px;
+  padding-bottom: 8px;
+}
+
+.settings-directory-list {
+  margin: -2px -10px -2px;
+}
+
+.settings-directory-list mdui-list-item {
+  --mdui-typescale-label-large-size: 13px;
+  --mdui-typescale-body-medium-size: 11px;
+  --shape-corner-rounded: 14px;
+}
+
+.settings-directory-list mdui-list-item .app-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.settings-directory-count {
+  display: inline-grid;
+  min-width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-primary) 9%, white);
+  color: var(--app-primary);
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.settings-security-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--app-surface-container);
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.settings-security-note .app-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.settings-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+}
+
+.settings-section-heading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.settings-section-heading > span {
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.pairing-code-panel {
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+  padding: 10px 13px;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 20%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--app-primary) 6%, white);
+}
+
+.pairing-code-panel > span {
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.pairing-code-panel strong {
+  color: var(--app-primary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 22px;
+  letter-spacing: .08em;
+}
+
+.pairing-code-panel small {
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.settings-collapse {
+  border: 1px solid var(--app-outline);
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.settings-collapse mdui-list-item {
+  --mdui-typescale-label-large-size: 12px;
+  --mdui-typescale-body-small-size: 10px;
+}
+
+.settings-help-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 20px 14px 38px;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.settings-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.settings-row-heading {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.settings-row-heading > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.settings-device-icon,
+.settings-model-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--app-primary) 8%, white);
+  color: var(--app-primary);
+}
+
+.settings-device-icon .app-icon,
+.settings-model-icon .app-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.profile-state {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--app-surface-container);
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.profile-state[data-enabled='true'] {
+  background: #e9f6ef;
+  color: #2f7d5a;
+}
+
+.settings-device-times {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.settings-device-times span {
+  display: grid;
+  gap: 2px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: var(--app-surface-container);
+  font-size: 10px;
+}
+
+.settings-device-times small {
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.device-chat-collapse {
+  border: 1px solid var(--app-outline);
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.device-chat-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 8px 16px 15px;
+}
+
+.device-chat-list mdui-checkbox {
+  --mdui-typescale-label-large-size: 11px;
+}
+
+.device-chat-list .empty-note,
+.device-chat-list mdui-button {
+  width: 100%;
+}
+
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.settings-empty-state {
+  display: grid;
+  min-height: 125px;
+  place-items: center;
+  align-content: center;
+  gap: 5px;
+  padding: 20px;
+  border: 1px dashed color-mix(in srgb, var(--app-outline) 95%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--app-surface-container) 55%, white);
+  color: var(--app-on-surface-variant);
+  text-align: center;
+}
+
+.settings-empty-state .app-icon {
+  width: 25px;
+  height: 25px;
+  color: var(--app-primary);
+}
+
+.settings-empty-state strong {
+  color: var(--app-on-surface);
+  font-size: 13px;
+}
+
+.settings-empty-state p {
+  margin: 0;
+  font-size: 10px;
+}
+
+.settings-add-model {
+  background: var(--app-surface);
+}
+
+.settings-model-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 16px 17px;
+}
+
+.settings-model-form mdui-text-field,
+.settings-model-form mdui-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.settings-wide-field {
+  grid-column: 1 / -1;
+}
+
+.settings-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-model-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.settings-model-meta span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--app-surface-container);
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.settings-advanced {
+  margin-top: 2px;
+  border-color: color-mix(in srgb, var(--app-outline) 78%, transparent);
+}
+
+.capability-list {
+  margin: 0;
+  padding: 4px 18px 14px 32px;
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.rotate-key-form {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 15px;
+}
+
+.rotate-key-form label {
+  display: grid;
+  flex: 1 1 240px;
+  gap: 5px;
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+}
+
+.rotate-key-form input {
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid var(--app-outline);
+  border-radius: 9px;
+  background: var(--app-surface);
+  color: inherit;
+}
+
+.settings-matrix-help {
+  margin: 0;
+  padding: 4px 16px 8px;
+}
+
+.catalog-row {
+  display: grid;
+  gap: 2px;
+  padding: 9px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 66%, transparent);
+}
+
+.catalog-row strong {
+  font-size: 11px;
+}
+
+.catalog-row span,
+.catalog-row small {
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.settings-run-list {
+  display: grid;
+}
+
+.settings-run-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 67%, transparent);
+}
+
+.settings-run-status {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #e9f6ef;
+  color: #2f7d5a;
+  font-size: 9px;
+  text-align: center;
+}
+
+.settings-run-status[data-status='failed'] {
+  background: #ffebea;
+  color: #a13c35;
+}
+
+.settings-run-row > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.settings-run-row strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-run-row small,
+.settings-run-metrics {
+  color: var(--app-on-surface-variant);
+  font-size: 9px;
+}
+
+.settings-run-metrics {
+  white-space: nowrap;
+}
+
+/* 主助手设置：模型、记忆和定时任务拆成独立标签页。 */
+.assistant-settings {
+  width: min(100%, 1060px);
+}
+
+.assistant-settings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 12px;
+}
+
+.assistant-settings-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assistant-settings-back {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid var(--app-outline);
+  border-radius: 12px;
+  background: var(--app-surface);
+  color: var(--app-on-surface-variant);
+  text-decoration: none;
+}
+
+.assistant-settings-back:hover {
+  border-color: color-mix(in srgb, var(--app-primary) 30%, var(--app-outline));
+  color: var(--app-primary);
+}
+
+.assistant-settings-back .app-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.assistant-settings-title h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.assistant-settings-title p:last-child {
+  margin: 2px 0 0;
+  color: var(--app-on-surface-variant);
+  font-size: 11px;
+}
+
+.assistant-settings > .error-text,
+.assistant-settings > .success-text {
+  margin: 0 0 9px;
+  padding: 8px 11px;
+  border-radius: 10px;
+}
+
+.assistant-settings-tabs {
+  margin-bottom: 13px;
+  border-bottom: 1px solid var(--app-outline);
+}
+
+.assistant-settings-panel {
+  display: grid;
+  gap: 11px;
+}
+
+.assistant-setting-card {
+  display: block;
+  border-color: var(--app-outline);
+  border-radius: 19px;
+  background: var(--app-surface);
+}
+
+.assistant-setting-card > .assistant-setting-card-heading,
+.assistant-setting-toggle,
+.assistant-setting-card > .assistant-setting-note,
+.assistant-setting-card > .assistant-setting-links,
+.assistant-setting-card > .assistant-memory-form,
+.assistant-setting-card > .assistant-memory-search,
+.assistant-setting-card > .assistant-memory-list,
+.assistant-setting-card > .helper-text,
+.assistant-setting-card > .success-text {
+  margin-right: 18px;
+  margin-left: 18px;
+}
+
+.assistant-setting-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-top: 17px;
+}
+
+.assistant-setting-card-heading > div {
+  min-width: 0;
+}
+
+.assistant-setting-card-heading h2,
+.assistant-setting-toggle h2 {
+  margin: 0 0 2px;
+  font-size: 17px;
+}
+
+.assistant-setting-card-heading p,
+.assistant-setting-toggle p {
+  margin: 0;
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.assistant-setting-icon {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  flex: 0 0 35px;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--app-primary) 8%, white);
+  color: var(--app-primary);
+}
+
+.assistant-setting-icon .app-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.assistant-setting-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr .9fr;
+  gap: 10px;
+  padding: 13px 18px 0;
+}
+
+.assistant-setting-grid mdui-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.assistant-setting-note {
+  margin-top: 10px;
+  margin-bottom: 13px;
+  color: var(--app-on-surface-variant);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.assistant-setting-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 15px;
+}
+
+.assistant-setting-links a {
+  color: var(--app-primary);
+  font-size: 10px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.assistant-setting-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 15px;
+  padding-bottom: 13px;
+}
+
+.assistant-setting-toggle > div {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+
+.assistant-memory-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px auto;
+  gap: 8px;
+  align-items: center;
+  padding: 13px 0 16px;
+}
+
+.assistant-memory-form mdui-text-field,
+.assistant-memory-form mdui-select {
+  width: 100%;
+}
+
+.assistant-memory-search {
+  width: calc(100% - 36px);
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.assistant-memory-list {
+  display: grid;
+  margin-bottom: 15px;
+  border-top: 1px solid color-mix(in srgb, var(--app-outline) 70%, transparent);
+}
+
+.assistant-memory-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--app-outline) 70%, transparent);
+}
+
+.assistant-memory-row > span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--app-surface-container);
+  color: var(--app-primary);
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.assistant-memory-row p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.assistant-settings .agent-task-plans {
+  margin-top: 0;
+}
+
+@keyframes agent-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes agent-avatar-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(49 93 168 / 0%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgb(49 93 168 / 8%);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes agent-thinking-dot {
+  0%,
+  60%,
+  100% {
+    opacity: .35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes agent-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes agent-halo {
+  0%,
+  100% {
+    opacity: .45;
+    transform: scale(.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes agent-glow {
+  0%,
+  100% {
+    opacity: .35;
+    transform: scale(.8);
+  }
+  50% {
+    opacity: .8;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes agent-core-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes today-live-pulse {
+  0%,
+  100% {
+    opacity: .65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .settings-overview-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(350px, .92fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .app-top-bar {
+    min-height: 54px;
+  }
+
+  .app-body {
+    min-height: calc(100dvh - 54px);
+  }
+
+  .main-content {
+    padding: 16px 14px calc(90px + env(safe-area-inset-bottom));
+  }
+
+  .main-content--chat {
+    height: calc(100dvh - 54px);
+    padding: 8px 10px;
+  }
+
+  .main-content--schedule {
+    height: calc(100dvh - 54px);
+    padding: 12px 12px calc(84px + env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+
+  .schedule-page {
+    height: 100%;
+  }
+
+  .schedule-calendar-shell--fill {
+    min-height: 300px;
+  }
+
+  .schedule-calendar-shell--fill .calendar-grid {
+    min-height: 500px;
+    grid-template-rows: 42px 500px;
+  }
+
+  .settings-tabs {
+    top: 54px;
+  }
+}
+
+@media (max-width: 760px) {
+  .main-content--chat {
+    height: calc(100dvh - 54px - 74px - env(safe-area-inset-bottom));
+    padding: 8px 10px;
+    overflow: hidden;
+  }
+
+  .agent-page {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .agent-page-heading {
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .agent-desktop-sidebar-toggle {
+    display: none;
+  }
+
+  .agent-title-mark {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+    border-radius: 11px;
+  }
+
+  .agent-title-mark .app-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .agent-page-heading h1 {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .agent-page-heading p {
+    display: none;
+  }
+
+  .agent-title-group {
+    flex: 0 0 auto;
+  }
+
+  .agent-title-group > div {
+    min-width: 0;
+  }
+
+  .agent-heading-actions {
+    flex-wrap: nowrap;
+  }
+
+  .agent-heading-link {
+    display: none;
+  }
+
+  .agent-main-button {
+    display: none;
+  }
+
+  .agent-heading-actions mdui-button {
+    height: 32px;
+  }
+
+  .agent-layout {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .agent-main {
+    height: 100%;
+    border-radius: 18px;
+  }
+
+  .agent-sidebar {
+    top: 54px;
+    bottom: calc(74px + env(safe-area-inset-bottom));
+    width: min(87vw, 340px);
+    padding: 12px;
+  }
+
+  .agent-profile-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+    gap: 6px;
+    padding: 7px 9px;
+  }
+
+  .agent-model-select,
+  .agent-thinking-select {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+  }
+
+  .agent-profile-row mdui-select {
+    --mdui-typescale-body-medium-size: 11px;
+  }
+
+  .agent-mode-note,
+  .agent-model-missing,
+  .agent-manage-link {
+    display: none;
+  }
+
+  .agent-turns {
+    padding: 14px 12px;
+  }
+
+  .agent-welcome {
+    padding-top: 12px;
+  }
+
+  .agent-welcome-visual {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 8px;
+  }
+
+  .agent-welcome-core {
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
+  }
+
+  .agent-welcome h2 {
+    font-size: 23px;
+  }
+
+  .agent-welcome-copy {
+    font-size: 12px;
+  }
+
+  .agent-welcome-tips {
+    display: none;
+  }
+
+  .agent-starters {
+    margin: 13px 0 5px;
+  }
+
+  .agent-starter {
+    min-height: 34px;
+    padding: 6px 11px;
+    font-size: 11px;
+  }
+
+  .agent-turn[data-role='user'] {
+    max-width: 88%;
+  }
+
+  .agent-composer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 7px 7px;
+    padding: 9px 10px 7px;
+  }
+
+  .agent-message-field {
+    --mdui-typescale-body-large-size: 13px;
+  }
+
+  .agent-message-field::part(container) {
+    min-height: 42px;
+    max-height: 118px;
+    font-size: 13px;
+  }
+
+  .agent-composer-note {
+    display: none;
+  }
+
+  .agent-composer-actions,
+  .agent-composer-tools,
+  .agent-send-group {
+    gap: 4px;
+  }
+
+  .agent-scroll-latest {
+    right: 13px;
+    bottom: 104px;
+  }
+
+  .agent-memory-hint {
+    display: none;
+  }
+
+  .today-heading {
+    align-items: flex-start;
+  }
+
+  .today-heading-actions .today-pill {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .today-heading-actions .today-pill-label {
+    display: none;
+  }
+
+  .today-heading-actions .today-pill .app-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .today-dashboard,
+  .today-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .today-dashboard {
+    gap: 10px;
+  }
+
+  .today-device-setup-main {
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 13px 14px 9px;
+  }
+
+  .today-device-setup-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .today-device-setup-main > mdui-button {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .today-device-setup-steps {
+    padding: 0 14px 13px;
+  }
+
+  .today-device-setup-steps span {
+    display: none;
+  }
+
+  .today-device-setup-steps small {
+    width: 100%;
+    margin-left: 0;
+    font-size: 10px;
+  }
+
+  .today-focus {
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .today-focus-body {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .today-focus h2 {
+    font-size: 24px;
+  }
+
+  .today-focus-deadline {
+    flex-wrap: wrap;
+  }
+
+  .today-focus-deadline small {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .today-action-card {
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .today-action-card .today-agent-cue {
+    margin-top: 0;
+  }
+
+  .today-columns {
+    gap: 0;
+  }
+
+  .today-block,
+  .today-radar {
+    padding: 15px 0 8px;
+  }
+
+  /* 手机标题与导入、新建同排，给课表留出首屏空间。 */
+  .schedule-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .schedule-header h1 {
+    font-size: 24px;
+    white-space: nowrap;
+  }
+
+  .schedule-header-actions {
+    width: auto;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+  }
+
+  .schedule-toolbar {
+    display: grid;
+    /* 四种视图单独占一行，避免新增年视图后被日期导航遮挡。 */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .schedule-view-switch {
+    width: 100%;
+  }
+
+  .schedule-navigation {
+    justify-content: space-between;
+    gap: 1px;
+  }
+
+  .schedule-navigation strong {
+    min-width: 0;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .schedule-range-wide,
+  .schedule-today-button {
+    display: none;
+  }
+
+  .schedule-range-compact {
+    display: inline;
+  }
+
+  .schedule-navigation mdui-button-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .schedule-search {
+    width: 100%;
+    height: 42px;
+    grid-column: 1 / -1;
+  }
+
+  .schedule-page .agent-insight-panel {
+    max-height: none;
+  }
+
+  .settings-tabs {
+    overflow-x: auto;
+  }
+
+  .settings-overview-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-status-security {
+    width: 100%;
+    margin-left: 0;
+    padding: 2px 0;
+  }
+
+  .settings-model-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-wide-field {
+    grid-column: auto;
+  }
+
+  .settings-row-heading {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .settings-row-heading .profile-state {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .settings-device-times {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-run-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .settings-run-metrics {
+    grid-column: 2;
+    white-space: normal;
+  }
+
+  .assistant-settings-header {
+    align-items: center;
+  }
+
+  .assistant-settings-title h1 {
+    font-size: 23px;
+  }
+
+  .assistant-settings-title p:last-child {
+    display: none;
+  }
+
+  .assistant-setting-grid,
+  .assistant-memory-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .assistant-memory-form {
+    align-items: stretch;
+  }
+
+  .assistant-setting-card > .assistant-setting-card-heading,
+  .assistant-setting-toggle,
+  .assistant-setting-card > .assistant-setting-note,
+  .assistant-setting-card > .assistant-setting-links,
+  .assistant-setting-card > .assistant-memory-form,
+  .assistant-setting-card > .assistant-memory-search,
+  .assistant-setting-card > .assistant-memory-list,
+  .assistant-setting-card > .helper-text,
+  .assistant-setting-card > .success-text {
+    margin-right: 13px;
+    margin-left: 13px;
+  }
+
+  .assistant-memory-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .assistant-memory-row mdui-button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 430px) {
+  .settings-status-strip {
+    gap: 5px;
+  }
+
+  .settings-status-strip mdui-chip {
+    --mdui-typescale-label-large-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-turn,
+  .agent-welcome-orbit,
+  .agent-welcome-visual::before,
+  .agent-welcome-visual::after,
+  .agent-welcome-core,
+  .agent-live-dot,
+  .agent-turn-avatar--thinking,
+  .agent-thinking-dots i,
+  .agent-progress-pulse,
+  .today-focus-label i {
+    animation: none !important;
+  }
+
+  .agent-starter {
+    transition: none;
+  }
+}
+
+/* 顶部品牌文字保持中等字重，与图标入口分开呈现。 */
+.app-brand-text { font-size: 17px; font-weight: 500; }
+
+/* 今日首页用更大的问候与小节标题建立层级，给时间线留出触摸空间。 */
+.today-page .today-heading { margin-bottom: 20px; }
+.today-page .today-heading h1 { font-size: clamp(32px, 4vw, 44px); line-height: 1.16; }
+.today-page .today-summary { margin-top: 8px; font-size: 15px; line-height: 1.6; }
+.today-page .section-heading h2 { font-size: 19px; }
+.today-page .section-heading p { margin-top: 5px; font-size: 13px; }
+.today-page .today-timeline-link,
+.today-page .today-radar-row { min-height: 56px; padding-block: 8px; }
+.today-page .today-timeline-copy strong,
+.today-page .today-radar-copy strong { font-size: 15px; line-height: 1.5; }

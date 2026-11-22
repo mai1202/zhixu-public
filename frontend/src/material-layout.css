@@ -1,0 +1,293 @@
+/* Material 3 的尺寸按用途分级：单行控件、内容块和主卡片使用不同圆角。 */
+.app-shell:not(.app-shell--guest) {
+  --nm-inset: 16px;
+  --nm-gap: 8px;
+  --nm-section-gap: 24px;
+  --nm-radius-control: 8px;
+  --nm-radius-card: 12px;
+  --nm-radius-panel: 16px;
+  --nm-radius-feature: 28px;
+  --nm-surface-lowest: rgb(var(--mdui-color-surface-container-lowest));
+  --nm-surface-low: rgb(var(--mdui-color-surface-container-low));
+  --nm-surface-container: rgb(var(--mdui-color-surface-container));
+  --nm-surface-high: rgb(var(--mdui-color-surface-container-high));
+  --nm-primary-container: rgb(var(--mdui-color-primary-container));
+  --nm-on-primary-container: rgb(var(--mdui-color-on-primary-container));
+  --nm-secondary-container: rgb(var(--mdui-color-secondary-container));
+  --nm-on-secondary-container: rgb(var(--mdui-color-on-secondary-container));
+  --nm-error: rgb(var(--mdui-color-error));
+  background: var(--app-surface);
+}
+
+.app-top-bar {
+  border-bottom-color: var(--app-outline);
+  background: var(--app-surface);
+}
+
+.app-brand-text { color: var(--app-on-surface); }
+.mobile-navigation { --mdui-color-surface-container: var(--mdui-color-surface-container-low); }
+.app-top-bar:has(.app-calendar-export) { column-gap: 8px; }
+.app-top-bar:has(.app-calendar-export) .app-profile-link { margin-left: 0; }
+
+/* 字号由内容角色决定。大标题 32/40，小节 22/28，行标题 16/24，说明 14/20。 */
+.today-page #today-heading,
+.schedule-page #schedule-heading,
+.matters-page #matters-heading,
+.notifications-page .notification-heading h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.today-page .section-heading h2,
+.today-page .today-action-heading h2,
+.today-page .today-action-panel-heading h2,
+.schedule-page .calendar-agenda-header h2 {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.273;
+  font-weight: 500;
+}
+
+.today-page .today-heading {
+  align-items: center;
+  gap: var(--nm-gap);
+  margin: 4px 0 var(--nm-section-gap);
+}
+.today-page .today-date-line { margin-bottom: 8px; color: var(--app-primary); font-size: .875rem; line-height: 1.429; }
+.today-page .today-date-chip { padding: 0; border-radius: 0; background: none; color: inherit; }
+.today-page .today-summary { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .875rem; line-height: 1.429; }
+.today-page .today-summary > span { white-space: nowrap; }
+.today-page .today-summary > span + span::before { content: '·'; margin-right: 12px; }
+
+/* 首页先看整天的安排，主卡片只用在这一区；待办、建议、消息都使用平面列表。 */
+.today-page .today-dashboard {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--nm-section-gap);
+  margin-block: 0 var(--nm-section-gap);
+}
+.today-page .today-dashboard > .today-block {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--nm-inset);
+  border: 0;
+  border-radius: var(--nm-radius-feature);
+  background: var(--nm-primary-container);
+  color: var(--nm-on-primary-container);
+  align-self: start;
+}
+.today-page .today-block .section-heading { align-items: center; margin: 0 0 8px; }
+.today-page .today-block .section-heading a { color: inherit; font-size: .875rem; }
+.today-page .today-timeline-link {
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  min-height: 56px;
+  gap: 8px;
+  padding: 8px 0;
+}
+.today-page .today-timeline-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--nm-radius-card);
+  background: color-mix(in srgb, var(--nm-on-primary-container) 8%, transparent);
+}
+.today-page .today-timeline-icon .app-icon { width: 20px; height: 20px; }
+.today-page .today-timeline-link > .app-icon { display: none; }
+.today-page .today-timeline-link time {
+  color: inherit;
+  font-size: .875rem;
+  line-height: 1.429;
+  white-space: nowrap;
+}
+.today-page .today-timeline-copy small { color: inherit; font-size: .875rem; opacity: .8; }
+.today-page .today-timeline-copy strong,
+.today-page .today-action-copy strong { font-size: 1rem; line-height: 1.5; }
+.today-page .today-action-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+.today-page .today-action-heading { align-items: center; margin-bottom: 4px; }
+.today-page .today-action-heading p { margin: 4px 0 0; }
+.today-page .today-action-all { font-size: .875rem; }
+.today-page .today-action-list { margin: 0; }
+.today-page .today-action-row { min-height: 56px; padding: 4px 0; border: 0; border-bottom: 1px solid var(--app-outline); }
+.today-page .today-action-copy small { font-size: .875rem; line-height: 1.429; }
+.today-page .today-action-panel {
+  padding: 0;
+  margin: 0 0 var(--nm-section-gap);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.today-action-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.today-page .today-action-panel .today-action-panel-heading h2 { margin: 0; }
+.today-action-panel-heading > .app-link { flex-shrink: 0; font-size: .875rem; }
+.today-page .today-action-panel .today-next-list { margin: 8px 0 0; gap: 0; }
+.today-page .today-action-panel .today-next-link {
+  min-height: 56px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--app-outline);
+  border-radius: 0;
+  background: transparent;
+}
+.today-page .today-action-panel .today-next-link:hover { background: var(--nm-surface-low); }
+.today-page .today-next-link strong,
+.today-page .today-radar-copy strong { font-size: 1rem; line-height: 1.5; }
+.today-page .today-next-link small,
+.today-page .today-radar-copy small { font-size: .875rem; line-height: 1.429; }
+.today-next-link > .app-icon:first-child { color: var(--app-primary); }
+.today-page .today-columns { display: block; }
+.today-page .today-radar { padding-top: 0; border: 0; }
+.today-page .today-radar-row { min-height: 56px; padding: 8px 0; border-radius: 0; }
+.today-page .today-radar .section-heading { align-items: center; }
+.today-page .today-radar .section-heading p { margin-block: 2px 0; }
+.today-page .today-support { margin-top: var(--nm-section-gap); }
+
+/* 日程用日历条和清单组合，两部分只有选中日期和课程是色块。 */
+.schedule-page .schedule-header { margin-bottom: 16px; }
+.schedule-page .schedule-toolbar { gap: 8px; margin-bottom: 16px; }
+.schedule-page .schedule-calendar-shell[data-view='day'] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.schedule-page .calendar-week-strip {
+  border: 0;
+  border-radius: var(--nm-radius-panel);
+  padding: 8px;
+  background: var(--nm-surface-container);
+}
+.schedule-page .calendar-week-strip button { border-radius: var(--nm-radius-control); }
+.schedule-page .calendar-agenda { margin-top: var(--nm-section-gap); background: transparent; }
+.schedule-page .calendar-agenda-header { margin: 0 0 12px; }
+.schedule-page .calendar-agenda-event { min-height: 88px; padding: 16px; border: 0; border-radius: var(--nm-radius-card); background: var(--nm-surface-container); }
+.schedule-page .calendar-agenda-event:hover { background: var(--nm-secondary-container); }
+.schedule-page .calendar-agenda-icon[data-course='true'] { background: var(--nm-primary-container); color: var(--nm-on-primary-container); }
+.schedule-page .calendar-agenda-copy strong { font-size: 1.125rem; line-height: 1.333; }
+.schedule-page .calendar-agenda-time,
+.schedule-page .calendar-agenda-meta { font-size: .875rem; line-height: 1.429; }
+.schedule-page .schedule-search,
+.schedule-page .schedule-editor { border-color: var(--app-outline); border-radius: var(--nm-radius-control); }
+.schedule-page .schedule-editor {
+  flex: 0 0 auto;
+  max-height: 45dvh;
+  margin-top: 16px;
+  overflow-y: auto;
+}
+
+/* 事务先显示待办；状态和日期在同一条左对齐的信息轴上。 */
+.matters-page .matters-header { flex-direction: row; align-items: center; }
+.matters-page .matters-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); border: 0; border-radius: var(--nm-radius-panel); background: var(--nm-secondary-container); }
+.matters-page .matters-metrics article { display: flex; min-width: 0; flex-direction: column-reverse; gap: 4px; align-items: center; padding: 12px 4px; border: 0; }
+.matters-page .matters-metrics strong { color: var(--nm-on-secondary-container); font-size: 1.375rem; line-height: 1.273; }
+.matters-page .matters-metrics span { color: var(--nm-on-secondary-container); font-size: .75rem; line-height: 1.333; }
+.matters-page .matters-columns > .matters-panel { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.matters-page .matter-row { grid-template-columns: 48px minmax(0, 1fr); gap: 8px; min-height: 56px; padding: 4px 0; border-color: var(--app-outline); }
+.matters-page .matter-row .matter-toggle { width: 48px; height: 48px; color: var(--app-primary); }
+.matters-page .matter-row-title a { font-size: 1rem; line-height: 1.5; }
+.matters-page .matter-row-main p { margin: 0; font-size: .875rem; line-height: 1.429; }
+.matters-page .matter-row-main p [data-overdue='true'] { color: var(--nm-error); }
+.matters-page .matter-row-main .matter-priority { margin-right: 8px; }
+
+/* 收件箱以搜索、筛选和列表为三段。行项目不使用圆角或阴影。 */
+.notifications-page .notification-controls { display: grid; gap: 8px; margin: 16px 0 8px; }
+.notifications-page .notification-search { display: flex; gap: 4px; }
+.notifications-page .notification-search-field { --shape-corner: 28px; }
+.notifications-page .notification-search-field::part(container) {
+  border: 0;
+  border-radius: 28px;
+  background: var(--nm-surface-container);
+}
+.notifications-page .mailbox-filters { gap: 8px; }
+.notifications-page .mailbox-refresh { margin-left: auto; }
+.notifications-page .mailbox-filters mdui-button { --shape-corner: var(--nm-radius-control); }
+.notifications-page .mailbox-filters mdui-button:not([aria-pressed='true']) { box-shadow: inset 0 0 0 1px var(--app-outline); }
+.notifications-page .notification-message-list > mdui-list { padding: 0; }
+.notifications-page .notification-message { margin: 0; min-height: 64px; }
+.notifications-page .notification-message:not(:first-child)::before {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  left: 28px;
+  height: 1px;
+  background: var(--app-outline);
+  content: '';
+  pointer-events: none;
+}
+.notifications-page .notification-message::part(container) { gap: 8px; padding: 4px 4px 4px 0; }
+.notifications-page .notification-message .notification-title { font-size: 1rem; line-height: 1.5; }
+.notifications-page .message-summary { font-size: .875rem; line-height: 1.429; }
+.notifications-page .notification-row-marker { display: grid; place-items: center; width: 18px; height: 20px; }
+.notifications-page .notification-row-marker[data-unread='false'] { visibility: hidden; }
+.notifications-page .notification-unread { background: transparent; }
+.notifications-page .message-end time { font-size: .75rem; line-height: 1.333; }
+
+/* 对话正文直接落在页面上，发言者和输入区用少量容器色区分。 */
+.agent-workspace .agent-topbar { background: var(--app-surface); }
+.agent-workspace .agent-turn--user {
+  border: 0;
+  padding: 12px 16px;
+  border-radius: var(--nm-radius-panel) var(--nm-radius-panel) 4px var(--nm-radius-panel);
+  background: var(--nm-secondary-container);
+  color: var(--nm-on-secondary-container);
+}
+.agent-workspace .agent-turn--user .agent-turn-content,
+.agent-workspace .agent-turn--user .agent-turn-label { color: inherit; }
+.agent-workspace .agent-turn-label { font-size: .75rem; line-height: 1.333; }
+.agent-workspace .agent-turn-content,
+.agent-workspace .agent-markdown { font-size: .875rem; line-height: 1.429; }
+.agent-workspace .agent-turn--assistant .agent-markdown { border: 0; border-radius: 0; background: transparent; padding: 0; }
+.agent-workspace .agent-composer { border-top: 0; padding-top: 8px; }
+/* 输入区仅在发送时显示进度和停止操作，模型与思考设置不占用底栏。 */
+.agent-workspace .agent-composer-pickers,
+.agent-workspace .agent-composer-warning,
+.agent-workspace .agent-composer-note { display: none; }
+.agent-workspace .agent-message-field::part(container) { border: 0; border-radius: 28px; background: var(--nm-surface-container); }
+
+@media (max-width: 760px) {
+  /* 所有页面沿同一个 16px 侧边基线，底栏仍由应用壳留出安全区。 */
+  .main-content:has(.today-page, .schedule-page, .matters-page, .notifications-page) { padding-inline: var(--nm-inset); }
+  .today-page .today-dashboard { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .today-page .today-action-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+  .today-page .today-action-row {
+    min-height: 64px;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--nm-radius-card);
+    background: var(--nm-surface-low);
+  }
+  /* 两项最靠前的建议并排呈现，文字仍可换行，较多建议继续向下排列。 */
+  .today-page .today-action-panel .today-next-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .today-page .today-action-panel .today-next-link {
+    height: 100%;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: var(--nm-radius-card);
+    background: var(--nm-surface-low);
+  }
+  .today-page .today-next-link > .app-icon:first-child { width: 16px; height: 16px; margin-top: 3px; }
+  .today-page .today-next-link > .app-icon:last-child { display: none; }
+  .today-page .today-next-link strong { font-size: .875rem; line-height: 1.429; }
+  .today-page .today-next-link small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .75rem;
+    line-height: 1.333;
+  }
+  .matters-page .matters-header-actions { flex: 0 0 auto; }
+}
+
+@media (max-width: 360px) {
+  /* 320px 视口也能同时容纳三组筛选和刷新入口。 */
+  .notifications-page .mailbox-filters { gap: 4px; }
+  .notifications-page .mailbox-filters mdui-button::part(button) { padding-inline: 10px; }
+  .notifications-page .notification-actions { gap: 2px; }
+}

@@ -1,0 +1,86 @@
+/* 反馈涉及的正文提高可读性，不缩放整站，也不改变其他业务页面的布局。 */
+.assistant-setting-card-heading p,
+.assistant-setting-toggle p,
+.assistant-setting-note,
+.assistant-setting-card > .helper-text,
+.assistant-setting-links a,
+.settings-index .helper-text {
+  font-size: 14px;
+  line-height: 1.75;
+}
+.assistant-setting-card-heading h2,
+.assistant-setting-toggle h2 { font-size: 20px; line-height: 1.5; }
+.assistant-setting-toggle { gap: 20px; padding-top: 20px; padding-bottom: 20px; }
+.assistant-setting-toggle > div { min-width: 0; }
+.assistant-setting-toggle mdui-switch { flex: 0 0 auto; }
+.settings-index mdui-list-item { --mdui-typescale-body-medium-size: 14px; --mdui-typescale-label-large-size: 16px; }
+.mobile-guide-link { display: inline-block; margin-top: 16px; font-size: 15px; line-height: 1.7; }
+
+/* 核对表单使用可触摸的输入和操作，空白作息行可直接删除。 */
+.timetable-import-page .import-table { font-size: 15px; }
+.timetable-import-page .import-table input,
+.schedule-dialog input,
+.schedule-dialog select { min-height: 44px; font: inherit; font-size: 16px; padding: 8px; }
+.import-table small { font-size: 13px; line-height: 1.6; color: var(--app-on-surface-variant); }
+.course-actual-times { display: flex; flex-wrap: wrap; gap: 10px; }
+.course-actual-times label { display: grid; gap: 4px; min-width: 110px; }
+.period-row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.period-row-actions mdui-button { min-height: 44px; min-width: 44px; padding: 8px; border: 1px solid var(--app-outline, #ccd3e0); border-radius: 9px; background: var(--app-surface, #fff); color: var(--app-primary, #315da8); font: inherit; cursor: pointer; }
+.period-row-actions mdui-button:disabled { opacity: .45; cursor: default; }
+.course-series-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.course-series-form-grid > label:first-child { grid-column: auto; }
+.schedule-dialog .helper-text { font-size: 14px; line-height: 1.7; }
+.calendar-event strong { font-size: 14px; }
+.calendar-event span { font-size: 13px; }
+.calendar-event small { font-size: 12px; }
+/* 撤销操作条与浮动助手分开占位，手机点击不能被助手入口遮挡。 */
+.undo-strip { bottom: 96px; z-index: 40; }
+/* 粘性条到底后仍给右侧固定入口留出独立点击区域，避免窗口高度变化时互相遮挡。 */
+@media (min-width: 901px) { .undo-strip { margin-right: 152px; } }
+.schedule-search { box-sizing: border-box; height: 44px; padding: 10px 14px; border: 1px solid var(--app-outline, #ccd3e0); border-radius: 10px; background: var(--app-surface, #fff); color: var(--app-on-surface, #263143); font: inherit; font-size: 15px; }
+.schedule-search:focus-visible { outline: 2px solid var(--app-primary, #315da8); outline-offset: 2px; }
+.agent-process-reasoning { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* 工作台的网格列允许缩到手机宽度，不能被下拉选项或分段按钮的固有宽度撑开。 */
+.activity-page { grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.activity-page > *, .model-billing > *, .billing-filter select { min-width: 0; }
+
+/* 手机通过同一账户使用网页，卡片式核对无需横向寻找字段。 */
+.mobile-use-page { max-width: 900px; font-size: 16px; line-height: 1.8; }
+.mobile-quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 24px 0; }
+.mobile-quick-actions a { padding: 16px; border-radius: 16px; background: #e9f0ff; color: #244b88; text-decoration: none; font-weight: 500; }
+.mobile-guide-card { margin: 18px 0; padding: 20px; border: 1px solid var(--app-outline, #ccd3e0); border-radius: 18px; background: var(--app-surface, #fff); }
+.mobile-guide-card h2 { font-size: 20px; margin-top: 0; }
+.agent-camera-button { display: none; }
+/* 装饰图标不截获MDUI内部原生按钮的点击，触屏中心点击同样有效。 */
+.agent-camera-button .app-icon { pointer-events: none; }
+@media (max-width: 760px) {
+  .undo-strip { bottom: calc(160px + env(safe-area-inset-bottom)); }
+  .agent-camera-button { display: inline-flex; }
+  .agent-composer-field { display: grid; }
+  .agent-composer-field-actions { position: static; justify-content: flex-end; margin-top: 4px; }
+  .agent-composer-field-actions mdui-button-icon { width: 44px; height: 44px; }
+  .agent-message-field { --mdui-typescale-body-large-size: 16px; }
+  .agent-message-field::part(container) { padding-right: 13px; }
+  .mobile-quick-actions { grid-template-columns: 1fr; }
+  .mobile-guide-card { padding: 16px; }
+  .timetable-import-page .import-table-scroll { overflow: visible; }
+  .timetable-import-page .import-table,
+  .timetable-import-page .import-table tbody { display: block; width: 100%; }
+  .timetable-import-page .import-table thead { display: none; }
+  .timetable-import-page .import-table tr { display: block; padding: 10px; margin-bottom: 16px; border: 1px solid var(--app-outline, #ccd3e0); border-radius: 14px; }
+  .timetable-import-page .import-table td { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 8px; align-items: start; min-width: 0; padding: 8px 0; border: 0; overflow-wrap: anywhere; }
+  .timetable-import-page .import-table td::before { content: attr(data-label); font-weight: 500; padding-top: 8px; }
+  .timetable-import-page .import-table input { min-width: 0; width: 100%; }
+  .timetable-import-page .import-table details p { min-width: 0; white-space: pre-wrap; }
+  .course-actual-times { flex-direction: column; min-width: 0; }
+  .course-actual-times label { min-width: 0; }
+  .import-table small { grid-column: 2; }
+  .course-series-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .course-series-form-grid label { min-width: 0; }
+  .course-series-form-grid input,
+  .course-series-form-grid select { box-sizing: border-box; width: 100%; min-width: 0; }
+}
+@media (max-width: 360px) {
+  .course-series-form-grid { grid-template-columns: 1fr; }
+  .assistant-setting-toggle { align-items: flex-start; }
+}

@@ -1,0 +1,110 @@
+name: notification-management
+
+# 无宿主目录、Docker socket 或提权挂载；仅命名数据卷和临时目录可写。
+x-runtime: &runtime
+  image: notification-management:local
+  build: .
+  user: "10001:10001"
+  init: true
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs:
+    - /tmp:size=268435456,mode=1777
+  pids_limit: 256
+  restart: unless-stopped
+  stop_grace_period: 30s
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+x-backend-env: &backend-env
+  DATA_DIR: /app/data
+  DATABASE_URL: sqlite:////app/data/notification_management.sqlite3
+  PI_AGENT_URL: http://127.0.0.1:5011
+
+services:
+  migrate:
+    <<: *runtime
+    env_file: [{path: .env.production, format: raw}]
+    environment: *backend-env
+    volumes:
+      - notification-data:/app/data
+    command: [python, -m, alembic, -c, /app/backend/alembic.ini, upgrade, head]
+    restart: "no"
+    mem_limit: 256m
+    cpus: 0.5
+    network_mode: none
+
+  api:
+    <<: *runtime
+    env_file: [{path: .env.production, format: raw}]
+    environment:
+      <<: *backend-env
+      SERVER_LISTEN: 0.0.0.0:8080
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      # 同机 Nginx 转发此端口，公网不能直连上游。
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - notification-data:/app/data
+      - pi-data:/app/data/private/pi
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/v1/health', timeout=5)"]
+      interval: 20s
+      timeout: 8s
+      retries: 3
+      start_period: 30s
+    mem_limit: 256m
+    cpus: 0.5
+
+  agent:
+    <<: *runtime
+    # Node 只取得派生的桥接令牌，不取得认证主密钥和 SMTP 授权码。
+    env_file: [{path: .env.agent, format: raw}]
+    environment:
+      DATA_DIR: /app/data
+      PI_AGENT_PORT: "5011"
+      PI_CALLBACK_URL: http://127.0.0.1:8080
+      NODE_OPTIONS: --max-old-space-size=256
+    network_mode: service:api
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - pi-data:/app/data/private/pi
+    command: [node, /app/agent-service/src/server.mjs]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:5011/health', {headers:{Authorization:'Bearer '+process.env.PI_BRIDGE_TOKEN}}).then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 8s
+      retries: 3
+      start_period: 30s
+    mem_limit: 384m
+    cpus: 0.75
+    stop_grace_period: 60s
+
+  worker:
+    <<: *runtime
+    env_file: [{path: .env.production, format: raw}]
+    environment: *backend-env
+    # 三进程共享容器网络，保留业务桥接层现有的回环地址校验。
+    network_mode: service:api
+    depends_on:
+      agent:
+        condition: service_healthy
+    volumes:
+      - notification-data:/app/data
+      - pi-data:/app/data/private/pi
+    command: [python, -m, notification_app.jobs.worker]
+    mem_limit: 640m
+    cpus: 0.75
+    shm_size: 128m
+
+volumes:
+  notification-data:
+  pi-data:

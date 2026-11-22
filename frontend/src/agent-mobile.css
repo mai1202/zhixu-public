@@ -1,0 +1,231 @@
+@import './calendar-export.css';
+
+/* 对话页与移动导航的独立修补，避免和并发开发中的页面样式混在同一段回溯里。 */
+
+/* 底栏占位由主内容区统一预留，MDUI 默认再给 body 加 80px 会造成整页内滚动。 */
+body {
+  padding-bottom: 0 !important;
+}
+
+/* 模型与思考强度各自成组，桌面保持横排，手机上可压缩为两列。 */
+.agent-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.agent-control select {
+  width: auto;
+  min-width: 180px;
+}
+
+.agent-thinking-control select {
+  min-width: 140px;
+}
+
+.agent-manage-link {
+  font-size: 13px;
+}
+
+.agent-action-short {
+  display: none;
+}
+
+/* 空对话页用可点击的开场问题代替一整段示例，降低第一次使用的输入成本。 */
+.agent-starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.agent-starter {
+  padding: 8px 13px;
+  border: 1px solid #d6dcea;
+  border-radius: 999px;
+  background: #fff;
+  color: #315da8;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+
+.agent-starter:hover {
+  border-color: #a9b9dc;
+  background: #f4f7ff;
+}
+
+.agent-starter:disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+/* 与应用壳的 900px 底栏断点一致，覆盖 761～900px 的平板和窄窗口。 */
+@media (max-width: 900px) {
+  /* MDUI 导航栏本身是横向 flex 容器；若被改成 block，五个入口会沿纵向堆叠。 */
+  .mobile-navigation {
+    display: flex;
+  }
+
+  .main-content.main-content--chat {
+    overflow: hidden;
+    padding: 12px 16px 0;
+  }
+
+  /* 对话页固定在顶栏和底栏之间，只有消息区滚动，输入框始终贴底可见。 */
+  .agent-page {
+    display: flex;
+    height: calc(100dvh - 158px - env(safe-area-inset-bottom));
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .agent-page .page-heading {
+    flex: 0 0 auto;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .agent-page .page-heading p {
+    display: none;
+  }
+
+  .agent-page .page-heading h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .agent-page .agent-layout {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+  }
+
+  .agent-main {
+    border-radius: 18px;
+  }
+
+  .agent-profile-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr);
+    align-items: end;
+    padding: 8px 10px;
+    gap: 6px 8px;
+  }
+
+  .agent-control {
+    display: grid;
+    gap: 2px;
+    font-size: 11px;
+  }
+
+  .agent-control select,
+  .agent-thinking-control select {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: 34px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  .agent-manage-link {
+    display: none;
+  }
+
+  .agent-turns {
+    padding: 14px 12px;
+  }
+
+  .agent-composer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    padding: 8px 10px 10px;
+  }
+
+  .agent-composer > label:first-child {
+    display: none;
+  }
+
+  .agent-composer textarea {
+    grid-column: 1 / -1;
+    min-height: 56px;
+    max-height: 92px;
+    resize: none;
+    padding: 10px 12px;
+  }
+
+  .agent-upload-label {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    grid-column: 1;
+    grid-row: 2;
+    padding: 6px 10px;
+    border: 1px solid #c9cbd3;
+    border-radius: 999px;
+    color: #315da8;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* 原生文件控件只负责选择文件，界面统一由胶囊按钮呈现。 */
+  .agent-upload-label input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .agent-composer .agent-attachment {
+    grid-column: 1 / -1;
+  }
+
+  .agent-composer-actions {
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .agent-composer-actions .helper-text {
+    display: none;
+  }
+
+  .agent-heading-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 6px;
+    --mdui-typescale-label-large-size: 12px;
+  }
+
+  .agent-heading-actions a {
+    font-size: 12px;
+  }
+
+  .agent-heading-actions mdui-button {
+    min-width: 0;
+    height: 34px;
+  }
+
+  .agent-action-label {
+    display: none;
+  }
+
+  .agent-action-short {
+    display: inline;
+  }
+
+  .agent-memory-hint {
+    display: none;
+  }
+}

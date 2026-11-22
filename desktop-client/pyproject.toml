@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "notification-management-client"
+version = "0.2.2"
+description = "通知管理的 Windows 本机采集与可靠上报客户端"
+requires-python = ">=3.12"
+dependencies = [
+    "tzdata>=2026.5",
+]
+
+[project.scripts]
+notification-client = "notification_client.cli:main"
+
+[project.optional-dependencies]
+wechat = [
+    "click>=8.1,<9",
+    "pycryptodome>=3.19,<4",
+    "zstandard>=0.22,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["notification_client*"]

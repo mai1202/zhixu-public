@@ -1,0 +1,96 @@
+{
+  "groups": [
+    {
+      "title": "采集与通知",
+      "entries": [
+        {
+          "title": "通知接入",
+          "href": "/settings/integrations",
+          "description": "Webhook 凭证与公众号、网站订阅源",
+          "keywords": "RSS Atom 公众号 webhook 订阅 接入",
+          "editable_by_agent": false
+        },
+        {
+          "title": "设备与采集",
+          "href": "/settings/devices",
+          "description": "配对客户端、群范围、采集频率与图片文件",
+          "keywords": "微信 附件 图片 文件 频率 更新 下载 配对",
+          "editable_by_agent": true
+        },
+        {
+          "title": "通知处理",
+          "href": "/settings/notifications",
+          "description": "通知自动维护与本人消息排除规则",
+          "keywords": "自动 整理 转化 开关 本人 发送 转发",
+          "editable_by_agent": true
+        }
+      ]
+    },
+    {
+      "title": "助手与模型",
+      "entries": [
+        {
+          "title": "模型连接",
+          "href": "/settings/models",
+          "description": "模型服务、密钥、连接测试与启用",
+          "keywords": "API key DeepSeek 连接 密钥",
+          "editable_by_agent": false
+        },
+        {
+          "title": "助手推理",
+          "href": "/settings/assistant",
+          "description": "主助手模型、思考强度和上下文容量",
+          "keywords": "思考 推理 规划 预算",
+          "editable_by_agent": true
+        },
+        {
+          "title": "长期记忆",
+          "href": "/settings/memory",
+          "description": "跨对话的偏好、作息、限制与目标",
+          "keywords": "记忆 偏好 作息 目标",
+          "editable_by_agent": true
+        },
+        {
+          "title": "定时任务",
+          "href": "/settings/schedules",
+          "description": "持续关注、自动检查与计划唤醒",
+          "keywords": "关注 计划 周期 唤醒",
+          "editable_by_agent": true
+        }
+      ]
+    },
+    {
+      "title": "提醒与账户",
+      "entries": [
+        {
+          "title": "邮件提醒",
+          "href": "/settings/mail",
+          "description": "日报、周报、截止提醒与安静时段",
+          "keywords": "日报 周报 邮箱 时区 安静",
+          "editable_by_agent": true
+        },
+        {
+          "title": "账户",
+          "href": "/settings/account",
+          "description": "登录邮箱与退出登录",
+          "keywords": "登录 邮箱 退出",
+          "editable_by_agent": false
+        },
+        {
+          "title": "安全",
+          "href": "/settings/security",
+          "description": "网页登录设备、长期登录与撤销设备登录",
+          "keywords": "安全 登录设备 撤销 多设备 浏览器 会话 续期",
+          "editable_by_agent": false
+        },
+        {
+          "title": "运行诊断",
+          "href": "/settings/diagnostics",
+          "description": "模型调用、用量、延迟与失败记录",
+          "keywords": "错误 日志 token 费用 高级",
+          "editable_by_agent": false
+        }
+      ]
+    }
+  ]
+}

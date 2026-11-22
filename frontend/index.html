@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#315da8" />
+    <meta name="description" content="知序把校园通知、课表、待办和日程整理进同一个持续对话的智能助手。" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="知序" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <title>知序 · 校园通知与日程助手</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "js-yaml": "/ocr-runtime/vendor/paddleocr/js-yaml.esm.js",
+          "clipper-lib": "/ocr-runtime/vendor/paddleocr/clipper-lib.esm.js",
+          "@techstark/opencv-js": "/ocr-runtime/vendor/paddleocr/opencv-loader.esm.js",
+          "onnxruntime-web": "/ocr-runtime/vendor/onnxruntime/onnxruntime-web.esm.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

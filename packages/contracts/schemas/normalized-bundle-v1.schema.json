@@ -1,0 +1,528 @@
+{
+  "$defs": {
+    "ChangeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "temp_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Temp Id",
+          "type": "string"
+        },
+        "target_event_temp_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Target Event Temp Id",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "patch": {
+          "additionalProperties": true,
+          "maxProperties": 40,
+          "title": "Patch",
+          "type": "object"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "temp_id",
+        "target_event_temp_id",
+        "summary",
+        "patch",
+        "evidence"
+      ],
+      "title": "ChangeCandidate",
+      "type": "object"
+    },
+    "DeadlineCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "raw": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Raw",
+          "type": "string"
+        },
+        "local_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Local Date"
+        },
+        "local_time": {
+          "anyOf": [
+            {
+              "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Local Time"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Timezone"
+        },
+        "precision": {
+          "enum": [
+            "unknown",
+            "year",
+            "month",
+            "day",
+            "minute",
+            "second"
+          ],
+          "title": "Precision",
+          "type": "string"
+        },
+        "utc": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Utc"
+        },
+        "basis": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Basis"
+        }
+      },
+      "required": [
+        "raw",
+        "local_date",
+        "local_time",
+        "timezone",
+        "precision",
+        "utc",
+        "basis"
+      ],
+      "title": "DeadlineCandidate",
+      "type": "object"
+    },
+    "EventCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "temp_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Temp Id",
+          "type": "string"
+        },
+        "notice_temp_id": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Notice Temp Id"
+        },
+        "title": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "actor": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Actor"
+        },
+        "stage": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stage"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scope"
+        },
+        "deadline": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeadlineCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time_range": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeRangeCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "materials": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Materials",
+          "type": "array"
+        },
+        "submission": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Submission"
+        },
+        "eligibility": {
+          "enum": [
+            "eligible",
+            "ineligible",
+            "unknown",
+            "conditional"
+          ],
+          "title": "Eligibility",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/EvidenceRef"
+            },
+            "type": "array"
+          },
+          "title": "Evidence",
+          "type": "object"
+        },
+        "unknowns": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Unknowns",
+          "type": "array"
+        }
+      },
+      "required": [
+        "temp_id",
+        "notice_temp_id",
+        "title",
+        "actor",
+        "stage",
+        "scope",
+        "deadline",
+        "time_range",
+        "materials",
+        "submission",
+        "eligibility",
+        "evidence",
+        "unknowns"
+      ],
+      "title": "EventCandidate",
+      "type": "object"
+    },
+    "EvidenceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "segment_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "quote": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "segment_id",
+        "quote"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "NoticeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "temp_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Temp Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Source Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "temp_id",
+        "title",
+        "source_ids"
+      ],
+      "title": "NoticeCandidate",
+      "type": "object"
+    },
+    "ScheduleEntryCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "temp_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Temp Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "busy_block",
+            "all_day",
+            "deadline_marker"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Date"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "End"
+        },
+        "all_day": {
+          "title": "All Day",
+          "type": "boolean"
+        },
+        "source_event_temp_id": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Event Temp Id"
+        }
+      },
+      "required": [
+        "temp_id",
+        "title",
+        "kind",
+        "date",
+        "start",
+        "end",
+        "all_day",
+        "source_event_temp_id"
+      ],
+      "title": "ScheduleEntryCandidate",
+      "type": "object"
+    },
+    "TimeRangeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date-time",
+          "title": "End",
+          "type": "string"
+        },
+        "timezone": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Timezone",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "timezone"
+      ],
+      "title": "TimeRangeCandidate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "notices": {
+      "items": {
+        "$ref": "#/$defs/NoticeCandidate"
+      },
+      "maxItems": 100,
+      "title": "Notices",
+      "type": "array"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/EventCandidate"
+      },
+      "maxItems": 500,
+      "title": "Events",
+      "type": "array"
+    },
+    "schedule_entries": {
+      "items": {
+        "$ref": "#/$defs/ScheduleEntryCandidate"
+      },
+      "maxItems": 500,
+      "title": "Schedule Entries",
+      "type": "array"
+    },
+    "change_candidates": {
+      "items": {
+        "$ref": "#/$defs/ChangeCandidate"
+      },
+      "maxItems": 100,
+      "title": "Change Candidates",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100,
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "notices",
+    "events",
+    "schedule_entries",
+    "change_candidates",
+    "warnings"
+  ],
+  "title": "NormalizedBundle",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://notification-management.local/contracts/normalized-bundle-v1.schema.json",
+  "description": "规则、模型和手工表单共同使用的候选输出；字段证据由服务端再次核验。"
+}

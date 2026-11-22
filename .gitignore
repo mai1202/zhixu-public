@@ -1,0 +1,45 @@
+# Python
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Frontend build products and dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+
+# Local data, partial downloads and secrets
+data/
+.runtime/
+*.dpapi
+*.part
+instance/
+.env
+.env.*
+!.env.example
+!deploy/.env.example
+*.sqlite
+*.sqlite3
+*.db
+# 本地业务资料只保留在用户电脑，不作为源码提交。
+公告文件/
+申报文件/
+*.log
+# 根目录的临时诊断脚本不属于产品源码，保留在本机但不进入版本库。
+_diag_*
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+*.swp
+
+# 按需下载的 OCR 第三方资源不属于业务源码。
+packages/ocr-runtime/public/ocr-runtime/vendor/

@@ -1,0 +1,30 @@
+{
+  "runtime_version": "paddleocr-js-0.4.2",
+  "model_family": "PP-OCRv6",
+  "default_model": "tiny",
+  "supported_models": ["tiny", "small"],
+  "execution": ["browser-worker", "server-playwright-chromium"],
+  "origin_project": "weight-tracker/static/vendor",
+  "files": [
+    { "path": "vendor/paddleocr/package.json", "bytes": 1640, "sha256": "b0852f082e668d85e480ec8804e3b7430c60a5b920991d1be75e5d2e5d6879be" },
+    { "path": "vendor/paddleocr/paddleocr.esm.js", "bytes": 81167, "sha256": "8f112a0a7747433d4a6aad407bf234848dbabaf71c017c83fcbd8fb062fcbc45" },
+    { "path": "vendor/paddleocr/assets/worker-entry-C9UNuyOJ.js", "bytes": 11341486, "sha256": "477db3f009c118823a5f9ebe15f1e96c1c464165715ba28a9884290f61addf52" },
+    { "path": "vendor/paddleocr/opencv.js", "bytes": 10378215, "sha256": "19b46167b59efbef9cc3836264b0b657110833e4b1df84282004b8b3141c048d" },
+    { "path": "vendor/paddleocr/opencv-loader.esm.js", "bytes": 1391, "sha256": "979f238e3e844f2f3610f141c22b7db69b79ba31ff6a9bf29079fa2bdf2659c6" },
+    { "path": "vendor/paddleocr/clipper-lib.esm.js", "bytes": 101067, "sha256": "3911b497bae930be5ceb5248e14e100c6909d6e1b660e0e298264fd599e6d0b8" },
+    { "path": "vendor/paddleocr/js-yaml.esm.js", "bytes": 44053, "sha256": "6e84d41365ac2008cf4acf9663ec57adf4d334bb48f2a1738a2c9691927ac71e" },
+    { "path": "vendor/onnxruntime/onnxruntime-web.esm.js", "bytes": 405482, "sha256": "08d78289bda485580069064db413110b6a72b4b4d4446703f9ec4fb7d3478764" },
+    { "path": "vendor/onnxruntime/ort-wasm-simd-threaded.jsep.mjs", "bytes": 46489, "sha256": "33949a3310b723a3ee14dc2da989e55060de26a75e2346095a150a042c9aad4e" },
+    { "path": "vendor/onnxruntime/ort-wasm-simd-threaded.jsep.wasm", "bytes": 26239907, "sha256": "411b39a77bb006ce0cf17b30c978c66a130ebb2ba39c8dfdbdc9c1c5a251ae76" },
+    { "path": "vendor/paddleocr/models/PP-OCRv6_tiny_det_onnx_infer.tar", "bytes": 1792000, "sha256": "ff6ab415b0a6e0c488550f2fb5d5046f1719848df220b2dc21b56402a65bc05d" },
+    { "path": "vendor/paddleocr/models/PP-OCRv6_tiny_rec_onnx_infer.tar", "bytes": 4526080, "sha256": "1e13b22717b1edd89d4cde4fda272b6c17d5b505c97c2baea99da1a3a2d54b29" },
+    { "path": "vendor/paddleocr/models/PP-OCRv6_small_det_onnx_infer.tar", "bytes": 9891840, "sha256": "d218f6fbf0f1c23d2161bd6ac7f5eaa6104fa89955c09290497e31008e2618e4" },
+    { "path": "vendor/paddleocr/models/PP-OCRv6_small_rec_onnx_infer.tar", "bytes": 21319680, "sha256": "d267ab077a44a0eedb1ea8f8c542d263f211de8e9d7a029bf9fcfff7e5a88fb1" }
+  ],
+  "licenses": [
+    { "name": "PaddleOCR.js 0.4.2", "spdx": "Apache-2.0", "source": "https://github.com/PaddlePaddle/PaddleOCR/tree/main/paddleocr-js" },
+    { "name": "PP-OCRv6 model assets", "spdx": "Apache-2.0", "source": "https://github.com/PaddlePaddle/PaddleOCR" },
+    { "name": "OpenCV.js 4.10.0-release.1", "spdx": "Apache-2.0", "source": "https://github.com/TechStark/opencv-js" },
+    { "name": "ONNX Runtime Web 1.22.x", "spdx": "MIT", "source": "https://github.com/microsoft/onnxruntime/tree/v1.22.0/js/web" }
+  ]
+}

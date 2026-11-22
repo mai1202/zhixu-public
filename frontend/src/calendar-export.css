@@ -1,0 +1,39 @@
+/* 日历导出入口放在应用顶栏，只在日程页出现，避免挤占五个主入口。 */
+.app-calendar-export {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #315da8;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background-color .16s ease;
+}
+
+.app-calendar-export:hover {
+  background: #e2eaff;
+}
+
+.app-calendar-export .app-icon {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 760px) {
+  .app-calendar-export {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .app-calendar-export span {
+    display: none;
+  }
+}

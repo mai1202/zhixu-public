@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://notification-management.local/contracts/job-v1.schema.json",
+  "title": "JobEnvelope",
+  "description": "持久任务的稳定协议；任务类型由服务器白名单决定。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "user_id", "kind", "status", "run_at_utc", "attempt", "max_attempts", "idempotency_key", "input_version"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string", "format": "uuid" },
+    "kind": { "type": "string", "enum": ["source.normalize", "ocr.server", "agent.run", "agent.notification", "digest.compose", "mail.send", "local_inference"] },
+    "status": { "type": "string", "enum": ["queued", "leased", "running", "succeeded", "retry_wait", "failed", "cancelled", "expired"] },
+    "run_at_utc": { "type": "string", "format": "date-time" },
+    "lease_until_utc": { "type": ["string", "null"], "format": "date-time" },
+    "attempt": { "type": "integer", "minimum": 0 },
+    "max_attempts": { "type": "integer", "minimum": 1, "maximum": 20 },
+    "idempotency_key": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "input_version": { "type": "integer", "minimum": 1 }
+  }
+}

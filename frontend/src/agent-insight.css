@@ -1,0 +1,240 @@
+/* 课程、事务与通知页共用的 Agent 值班建议卡。 */
+.agent-insight-panel {
+  overflow: hidden;
+  border: 1px solid #dce4f2;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f6f9ff, #fff 58%);
+}
+
+.schedule-page > .agent-insight-panel,
+.matters-page > .agent-insight-panel,
+.inbox-page > .agent-insight-panel {
+  margin: 16px 0 20px;
+}
+
+.agent-insight-panel > header {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 18px 20px 14px;
+}
+
+.agent-insight-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border-radius: 13px;
+  background: #e6edfa;
+  color: #315da8;
+}
+
+.agent-insight-panel > header > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.agent-insight-panel h2 {
+  margin: 2px 0 4px;
+  font-size: 1.15rem;
+}
+
+.agent-insight-panel header p:last-child {
+  margin: 0;
+  color: #667080;
+  font-size: 0.82rem;
+}
+
+.agent-insight-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.agent-insight-actions mdui-button,
+.agent-insight-row-actions mdui-button {
+  --mdui-typescale-label-large-size: 12px;
+}
+
+.agent-insight-actions button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.agent-insight-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0 20px 14px;
+  list-style: none;
+}
+
+.agent-insight-list li {
+  display: block;
+  padding: 4px 0;
+  border-top: 1px solid rgba(216, 224, 238, 0.75);
+}
+
+/* 整行由 RippleSurface 承载点击与涟漪；内边距做成圆角卡片，悬浮时整块有反馈。 */
+.agent-insight-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 8px;
+  border-radius: 12px;
+  transition: background-color 160ms ease;
+}
+
+.agent-insight-row:hover {
+  background: rgba(49, 93, 168, 0.06);
+}
+
+.agent-insight-row:active {
+  background: rgba(49, 93, 168, 0.1);
+}
+
+.agent-insight-row--disabled {
+  cursor: default;
+}
+
+.agent-insight-body {
+  display: block;
+  min-width: 0;
+}
+
+.agent-insight-panel--compact > header {
+  padding: 10px 12px 8px;
+}
+
+.agent-insight-panel--compact .agent-insight-mark {
+  width: 32px;
+  height: 32px;
+  flex-basis: 32px;
+}
+
+.agent-insight-panel--compact h2 {
+  font-size: 0.98rem;
+}
+
+.agent-insight-dot {
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: #4c78b9;
+}
+
+.agent-insight-list li[data-severity="critical"] .agent-insight-dot {
+  background: #b84a45;
+  box-shadow: 0 0 0 4px #fae9e8;
+}
+
+.agent-insight-list li[data-severity="warning"] .agent-insight-dot {
+  background: #b27627;
+  box-shadow: 0 0 0 4px #fbf1e1;
+}
+
+.agent-insight-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.agent-insight-title span {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #edf1f7;
+  color: #657084;
+  font-size: 0.69rem;
+}
+
+.agent-insight-list li[data-severity="critical"] .agent-insight-title span {
+  background: #fae9e8;
+  color: #9e3f3a;
+}
+
+.agent-insight-list li[data-severity="warning"] .agent-insight-title span {
+  background: #fbf1e1;
+  color: #92621d;
+}
+
+.agent-insight-detail {
+  display: block;
+  margin: 4px 0 0;
+  color: #5d6777;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.agent-insight-list p {
+  margin: 4px 0 0;
+  color: #5d6777;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.agent-insight-row-actions {
+  display: flex;
+  gap: 6px;
+  margin: 2px 0 0 16px;
+  font-size: 0.76rem;
+}
+
+.agent-insight-row-actions a {
+  color: #315da8;
+  text-decoration: none;
+}
+
+.agent-insight-empty {
+  margin: 0;
+  padding: 0 20px 18px;
+  color: #697384;
+  font-size: 0.84rem;
+}
+
+.agent-insight-loading {
+  display: grid;
+  min-height: 72px;
+  place-items: center;
+}
+
+@media (max-width: 620px) {
+  .agent-insight-panel {
+    border-radius: 14px;
+  }
+
+  .agent-insight-panel > header {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 9px;
+    padding: 11px 12px 8px;
+  }
+
+  .agent-insight-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .agent-insight-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .agent-insight-actions mdui-button {
+    min-width: 0;
+    --mdui-typescale-label-large-size: 10px;
+  }
+
+  .agent-insight-list {
+    padding: 0 12px 10px;
+  }
+
+  .agent-insight-empty {
+    padding: 0 12px 12px;
+  }
+}

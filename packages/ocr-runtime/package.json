@@ -1,0 +1,12 @@
+{
+  "name": "@notification-management/ocr-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "vite build --config vite.config.ts"
+  }
+}

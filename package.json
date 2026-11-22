@@ -1,0 +1,19 @@
+{
+  "name": "notification-management",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "agent-service",
+    "packages/contracts"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @notification-management/frontend",
+    "build": "npm run ocr:build && npm run build --workspace @notification-management/frontend",
+    "typecheck": "npm run typecheck --workspace @notification-management/frontend",
+    "ocr:build": "vite build packages/ocr-runtime --config packages/ocr-runtime/vite.config.ts"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
